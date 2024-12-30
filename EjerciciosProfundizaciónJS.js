@@ -120,7 +120,7 @@ La función debe tener 2 parámetros:
     de tener un valor de 3. */
 
 function fromBytesToFormattedSizeUnits(bytes, precision = 3) {
-    // Validar que los bytes sean un número
+    // Validamos que los bytes pasados sean un número
     if (isNaN(bytes)) {
         return "Invalid input";
     }
@@ -133,18 +133,18 @@ function fromBytesToFormattedSizeUnits(bytes, precision = 3) {
     // Unidades de medida
     const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     
-    // Trabajar con el valor absoluto para los cálculos
+    // Trabajamos con el valor absoluto para los cálculos
     const isNegative = bytes < 0; // Verificar si el número es negativo
     bytes = Math.abs(bytes);
     
-    // Convertir bytes a la unidad adecuada solo si es mayor o igual a 1024
+    // Convertimos bytes a la unidad adecuada solo si es mayor o igual a 1024
     let index = 0;
     while (bytes >= 1024 && index < units.length - 1) {
         bytes /= 1024;
         index++;
     }
     
-    // Aplicar la precisión solicitada a la cantidad de bytes (para las conversiones con decimales)
+    // Aplicamos la precisión (para las conversiones con decimales)
     bytes = Number(bytes.toPrecision(precision));
     
     // Si el valor es menor a 1 KB y la unidad no ha cambiado (es decir, sigue en B), entonces aseguramos que la unidad sea KB
