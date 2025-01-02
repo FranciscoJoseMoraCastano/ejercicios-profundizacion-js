@@ -124,48 +124,60 @@ function fromBytesToFormattedSizeUnits(bytes, precision = 3) {
     if (isNaN(bytes)) {
         return "Invalid input";
     }
-    
+        
     // Si los bytes son 0, devolvemos "0 B"
     if (bytes === 0) {
         return `0 B`;
     }
-    
+        
     // Unidades de medida
     const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    
+        
     // Trabajamos con el valor absoluto para los cálculos
     const isNegative = bytes < 0; // Verificar si el número es negativo
     bytes = Math.abs(bytes);
-    
-    // Convertimos bytes a la unidad adecuada solo si es mayor o igual a 1024
+        
+    // Convertimos bytes a la unidad adecuada solo si es mayor o igual a 1000 (el error era usar 1024)
     let index = 0;
-    while (bytes >= 1024 && index < units.length - 1) {
-        bytes /= 1024;
-        index++;
+    while (bytes >= 1000 && index < units.length - 1) {
+    bytes /= 1000;
+    index++;
     }
-    
+        
     // Aplicamos la precisión (para las conversiones con decimales)
     bytes = Number(bytes.toPrecision(precision));
-    
-    // Si el valor es menor a 1 KB y la unidad no ha cambiado (es decir, sigue en B), entonces aseguramos que la unidad sea KB
-    if (index === 0 && bytes >= 1 && bytes < 1024) {
-        bytes = 1;
-        index = 1; // Cambiar a KB
-    }
     
     // Agregar el signo negativo si el número original era negativo
     return `${isNegative ? '-' : ''}${bytes} ${units[index]}`;
 };
-    
+        
 const result1 = fromBytesToFormattedSizeUnits(1000);
 console.log('result 1: ' + result1); // "1 KB"
-    
+        
 const result2 = fromBytesToFormattedSizeUnits(123456789);
-console.log('result 2: ' + result2); // "118 MB"
-    
+console.log('result 2: ' + result2); // "123 MB"
+        
 const result3 = fromBytesToFormattedSizeUnits(-12145489451.5932, 5);
-console.log('result 3: ' + result3); // "-11.311 GB"
+console.log('result 3: ' + result3); // "-12.145 GB"
 
+/* 
+División por 1000 (Sistema Decimal):
+    Este es el sistema usado comúnmente en la industria comercial, como en los discos duros, unidades USB, y otros dispositivos de almacenamiento.
+    Aquí las unidades se escalan por múltiplos de 1000, donde:
+    1 KB = 1000 bytes
+    1 MB = 1000 KB
+    1 GB = 1000 MB, etc.
+    Este estándar está respaldado por SI (Sistema Internacional de Unidades) y se utiliza principalmente para fines de marketing.
+
+División por 1024 (Sistema Binario):
+    Este sistema se utiliza en el ámbito técnico y en computación, ya que los sistemas digitales trabajan con potencias de 2.
+    Aquí las unidades se escalan por múltiplos de 1024, donde:
+    1 KiB (kibibyte) = 1024 bytes
+    1 MiB (mebibyte) = 1024 KiB
+    1 GiB (gibibyte) = 1024 MiB, etc.
+    Este estándar está respaldado por IEC (International Electrotechnical Commission) y es más preciso en el contexto técnico.
+*/
+    
 /* Ejercicio 9
 Crea una función que a partir de un objeto de entrada, retorne un objeto
 asegurándose que las claves del objeto estén en lowercase.
